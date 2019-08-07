@@ -6,11 +6,10 @@ from cryptoprice import get_crypto_price
 from cryptoprice import get_crypto_change
 from models import db, User, Cryptocurrency
 
-SECRETS_DB = {}
-
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__)
 
 db.create_all()
+
 
 def load_dummies():
     btc = Cryptocurrency(
@@ -108,9 +107,10 @@ def load_dummies():
 
 load_dummies()
 
+
 @app.route("/")
 def index():
-    return render_template("/index.html")
+    return render_template("index.html")
 
 
 @app.route("/portfolio")
@@ -151,16 +151,11 @@ def login():
             response.set_cookie("session_cookie", session_cookie, expires=time.time() + 3600)
             return response
 
-            # render_template
-            # -> show html now on this url where you are
-
-            # redirect
-            # -> move to new url, make get request there
         return redirect(url_for("login"))
 
 
 @app.route("/cryptoverse", methods=["GET", "POST"])
-def crypto():
+def cryptoverse():
     if request.method == "GET":
         cryptocurrencies = db.query(Cryptocurrency).all()
         for crypto in cryptocurrencies:
@@ -184,5 +179,6 @@ def crypto():
         db.commit()
         return redirect(url_for('cryptoverse'))
 
+
 if __name__ == '__main__':
-            app.run()
+    app.run()

@@ -1,4 +1,27 @@
 {% extends "base.html" %}
 
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Icon</th>
+      <th scope="col">Name</th>
+      <th scope="col">Ticker</th>
+      <th scope="col">Price</th>
+      <th scope="col">Change</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+        <td></td>
+        <td><a href="/portfolio/{{crypto.code}}"><img src="{{crypto.imgLink}}"></a></td>
+        <td>{{crypto.name}}</td>
+        <td>{{crypto.code}}</td>
+        <td>{{crypto.price}}</td>
+        <td>{{crypto.change}}</td>
+    </tr>
+  </tbody>
+</table>
+
 {% block content %}
 {% endblock content %}

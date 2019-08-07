@@ -21,4 +21,5 @@ def get_crypto_change(code):
 if __name__ == '__main__':
     for crypto_code in ["btc", "eth", "xrp", "bch", "ltc", "bnb", "sdt", "eos", "bsv", "xmr"]:
         price = get_crypto_price(crypto_code)
-        print(crypto_code, price)
+        change = get_crypto_change(crypto_code)
+        print(crypto_code, price, change)
