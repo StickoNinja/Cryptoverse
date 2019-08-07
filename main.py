@@ -13,6 +13,7 @@ db.create_all()
 
 def load_dummies():
     btc = Cryptocurrency(
+        id=1,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/1.png",
         code="BTC",
         name="Bitcoin",
@@ -21,6 +22,7 @@ def load_dummies():
     )
 
     eth = Cryptocurrency(
+        id=2,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/1027.png",
         code="ETH",
         name="Ethereum",
@@ -29,6 +31,7 @@ def load_dummies():
     )
 
     xrp = Cryptocurrency(
+        id=3,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/52.png",
         code="XRP",
         name="XRP",
@@ -37,6 +40,7 @@ def load_dummies():
     )
 
     bch = Cryptocurrency(
+        id=4,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/1831.png",
         code="BCH",
         name="Bitcoin Cash",
@@ -45,6 +49,7 @@ def load_dummies():
     )
 
     ltc = Cryptocurrency(
+        id=5,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/2.png",
         code="LTC",
         name="Litecoin",
@@ -53,6 +58,7 @@ def load_dummies():
     )
 
     bnb = Cryptocurrency(
+        id=6,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/1839.png",
         code="BNC",
         name="Binance Coin",
@@ -61,6 +67,7 @@ def load_dummies():
     )
 
     usdt = Cryptocurrency(
+        id=7,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/825.png",
         code="USDT",
         name="Tether",
@@ -69,6 +76,7 @@ def load_dummies():
     )
 
     eos = Cryptocurrency(
+        id=8,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/1765.png",
         code="EOS",
         name="EOS",
@@ -77,6 +85,7 @@ def load_dummies():
     )
 
     bsv = Cryptocurrency(
+        id=9,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/3602.png",
         code="BSV",
         name="Bitcoin SV",
@@ -85,6 +94,7 @@ def load_dummies():
     )
 
     xmr = Cryptocurrency(
+        id=10,
         imgLink="https://s2.coinmarketcap.com/static/img/coins/32x32/328.png",
         code="XMR",
         name="Monero",
@@ -169,6 +179,7 @@ def cryptoverse():
                                showAll=True)
     elif request.method == "POST":
         crypto = Cryptocurrency(
+            id=request.form.get("id"),
             imgLink=request.form.get("imgLink"),
             name=request.form.get("name"),
             code=request.form.get("code"),
@@ -178,6 +189,34 @@ def cryptoverse():
         db.add(crypto)
         db.commit()
         return redirect(url_for('cryptoverse'))
+
+
+@app.route("/portfolio/<crypto_code>/add", methods=["GET", "POST"])
+def crypto_edit(crypto_code):
+    if request.method == "GET":
+        crypto = db.query(Cryptocurrency).filter_by(code=crypto_code).first()
+        return render_template("portfolio.html",
+                               currentCrypto=crypto,
+                               showAll=False)
+    elif request.method == "POST":
+        crypto = db.query(Cryptocurrency).filter_by(code=crypto_code).first()
+        crypto.id = request.form.get("id")
+        crypto.imgLink = request.form.get("imgLink")
+        crypto.name = request.form.get("name")
+        crypto.code = request.form.get("code")
+        crypto.price = float(request.form.get("price"))
+        crypto.change = float(request.form.get("change"))
+        db.add(crypto)
+        db.commit()
+        return redirect(url_for("portfolio"))
+
+
+@app.route("/portfolio/<crypto_code>/delete", methods=["GET"])
+def crypto_delete(crypto_code):
+    crypto = db.query(Cryptocurrency).filter_by(code=crypto_code).first()
+    db.delete(crypto)
+    db.commit()
+    return redirect(url_for("portfolio"))
 
 
 if __name__ == '__main__':

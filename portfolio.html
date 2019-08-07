@@ -13,6 +13,7 @@
 
 {% if not showAll %}
 <form method="post" action="/portfolio/{{currentCrypto.code}}/add" class="form-inline d-flex">
+    <input type="text" placeholder="id" name="id" value="{{currentCrypto.id}}">
     <input type="text" placeholder="imgLink" name="imgLink" value="{{currentCrypto.imgLink}}">
     <input type="text" placeholder="name" name="name" value="{{currentCrypto.name}}">
     <input type="text" placeholder="code" name="code" value="{{currentCrypto.code}}">
@@ -26,6 +27,7 @@
 
 {% if showAll %}
 <form method="post" action="/portfolio" class="form-inline d-flex">
+    <input type="text" placeholder="id" name="id">
     <input type="text" placeholder="imgLink" name="imgLink">
     <input type="text" placeholder="name" name="name">
     <input type="text" placeholder="code" name="code">
@@ -51,7 +53,7 @@
 
     {% for crypto in cryptocurrencies %}
     <tr>
-        <td></td>
+        <td>{{crypto.id}}</td>
         <td><a href="/portfolio/{{crypto.code}}"><img src="{{crypto.imgLink}}"></a></td>
         <td>{{crypto.name}}</td>
         <td>{{crypto.code}}</td>
