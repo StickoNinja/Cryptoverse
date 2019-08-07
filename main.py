@@ -123,11 +123,6 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/portfolio")
-def portfolio():
-    return render_template("portfolio.html")
-
-
 @app.route("/newsletter")
 def newsletter():
     return render_template("newsletter.html")
@@ -189,6 +184,19 @@ def cryptoverse():
         db.add(crypto)
         db.commit()
         return redirect(url_for('cryptoverse'))
+
+
+@app.route("/portfolio", methods=["GET"])
+def portfolio():
+        cryptocurrencies = db.query(Cryptocurrency).all()
+        for crypto in cryptocurrencies:
+            crypto.price = get_crypto_price(crypto.code)
+            crypto.change = get_crypto_change(crypto.code)
+        db.add_all(cryptocurrencies)
+        db.commit()
+        return render_template("portfolio.html",
+                               cryptocurrencies=cryptocurrencies,
+                               showAll=True)
 
 
 @app.route("/portfolio/<crypto_code>/add", methods=["GET", "POST"])
