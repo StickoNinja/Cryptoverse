@@ -8,10 +8,9 @@ from models import db, User, Cryptocurrency
 
 SECRETS_DB = {}
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates')
 
 db.create_all()
-
 
 def load_dummies():
     btc = Cryptocurrency(
@@ -109,10 +108,9 @@ def load_dummies():
 
 load_dummies()
 
-
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("/index.html")
 
 
 @app.route("/portfolio")
