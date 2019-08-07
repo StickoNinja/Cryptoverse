@@ -1,6 +1,6 @@
 import requests
 
-def cryptoprice(code):
+def get_crypto_price(code):
     url = f"https://api.cryptonator.com/api/ticker/{code}-eur"
     result = requests.request("GET", url)
     data = result.json()
@@ -9,8 +9,16 @@ def cryptoprice(code):
     else:
         return -1
 
+def get_crypto_change(code):
+    url = f"https://api.cryptonator.com/api/ticker/{code}-eur"
+    result = requests.request("GET", url)
+    data = result.json()
+    if ("ticker" in data) and ("change" in data["ticker"]):
+        return data["ticker"]["change"]
+    else:
+        return -1
 
 if __name__ == '__main__':
-    for cryptoticker in ["btc", "eth", "qnt"]:
-        price = cryptoprice(cryptoticker)
-        print(cryptoticker, price)
+    for crypto_code in ["btc", "eth", "xrp", "bch", "ltc", "bnb", "sdt", "eos", "bsv", "xmr"]:
+        price = get_crypto_price(crypto_code)
+        print(crypto_code, price)

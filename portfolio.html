@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Portfolio</title>
-</head>
-<body>
+{% extends "index.html" %}
 
-</body>
-</html>
+{% block content %}
+<p>Crypto Page</p>
+
+{% if not showAll %}
+<form method="post" action="/crypto/{{currentCrypto.code}}/edit">
+    <input type="text" placeholder="name" name="name" value="{{currentCrypto.name}}">
+    <input type="text" placeholder="code" name="code" value="{{currentCrypto.code}}">
+    <input type="text" placeholder="price" name="price" value="{{currentCrypto.price}}">
+    <input type="text" placeholder="marketCap" name="marketCap" value="{{currentCrypto.marketCap}}">
+    <input type="text" placeholder="imgLink" name="imgLink" value="{{currentCrypto.imgLink}}">
+    <button type="submit">Edit</button>
+</form>
+{% endif %}
+
+
+{% if showAll %}
+<form method="post" action="/crypto">
+    <input type="text" placeholder="name" name="name">
+    <input type="text" placeholder="code" name="code">
+    <input type="text" placeholder="price" name="price">
+    <input type="text" placeholder="marketCap" name="marketCap">
+    <input type="text" placeholder="imgLink" name="imgLink">
+    <button type="submit">Add</button>
+</form>
+
+<table class="table table-dark">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Code</th>
+        <th scope="col">Price</th>
+        <th scope="col">Market Cap</th>
+        <th scope="col">Image</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for crypto in cryptocurrencies %}
+    <tr>
+        <td>{{crypto.name}}</td>
+        <td>{{crypto.code}}</td>
+        <td>{{crypto.price}}</td>
+        <td>{{crypto.marketCap}}</td>
+        <td><a href="/crypto/{{crypto.code}}"><img src="{{crypto.imgLink}}" height="15px"></a></td>
+        <td><a href="/crypto/{{crypto.code}}/edit">Edit</a></td>
+        <td><a href="/crypto/{{crypto.code}}/delete">Delete</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock content %}
