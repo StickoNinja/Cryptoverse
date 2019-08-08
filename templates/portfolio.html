@@ -44,15 +44,15 @@
                     </thead>
                     <tbody bgcolor="white">
 
-                    {% for newcrypto in newcryptos %}
+                    {% for crypto in cryptocurrencies %}
                     <tr>
-                        <td>{{newcrypto.id}}</td>
-                        <td>{{newcrypto.name}}</td>
-                        <td>{{newcrypto.code}}</td>
-                        <td>{{newcrypto.price}}</td>
-                        <td>{{newcrypto.quantity}}</td>
-                        <td><a href="/portfolio/{{newcrypto.code}}/edit">Edit</a></td>
-                        <td><a href="/portfolio/{{newcrypto.code}}/delete">Delete</a></td>
+                        <td>{{crypto.id}}</td>
+                        <td>{{crypto.name}}</td>
+                        <td>{{crypto.code}}</td>
+                        <td>{{crypto.price}}</td>
+                        <td>{{crypto.quantity}}</td>
+                        <td><a href="/portfolio/{{crypto.code}}/edit">Edit</a></td>
+                        <td><a href="/portfolio/{{crypto.code}}/delete">Delete</a></td>
 
                     </tr>
                     {% endfor %}

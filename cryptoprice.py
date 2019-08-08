@@ -26,7 +26,3 @@ if __name__ == '__main__':
         price = get_crypto_price(crypto_code)
         change = get_crypto_change(crypto_code)
         print(crypto_code, price, change)
-
-    for newcrypto_code in ["qnt"]:
-        price = get_crypto_price(newcrypto_code)
-        print(newcrypto_code, price)

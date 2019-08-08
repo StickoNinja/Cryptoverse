@@ -19,11 +19,4 @@ class Cryptocurrency(db.Model):
     name = db.Column(db.String, unique=True)
     price = db.Column(db.Float)
     change = db.Column(db.Float)
-
-
-class Newcrypto(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String, unique=True)
-    name = db.Column(db.String, unique=True)
-    price = db.Column(db.Float)
-    quantity = db.Column(db.Float)
+    quantity = db.Column(db.Integer)

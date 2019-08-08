@@ -4,7 +4,7 @@ import hashlib
 from datetime import time
 from cryptoprice import get_crypto_price
 from cryptoprice import get_crypto_change
-from models import db, User, Cryptocurrency, Newcrypto
+from models import db, User, Cryptocurrency
 
 app = Flask(__name__)
 
@@ -102,13 +102,6 @@ def load_dummies():
         change=1
     )
 
-    qnt = Newcrypto(
-        code="QNT",
-        name="Quantnetwork",
-        price=200,
-        quantity=50
-    )
-
     cryptocurrencies = [btc, eth, xrp, bch, ltc, bnb, eos, bsv, xmr, xlm]
 
     for crypto in cryptocurrencies:
@@ -119,18 +112,6 @@ def load_dummies():
         else:
             print("Saving", crypto.code)
             db.add(crypto)
-            db.commit()
-
-    newcryptos = [qnt]
-
-    for newcrypto in newcryptos:
-        db_newcrypto = db.query(Newcrypto).filter_by(code=newcrypto.code).first()
-        if db_newcrypto:
-            print("Skipping", newcrypto.code)
-            continue
-        else:
-            print("Saving", newcrypto.code)
-            db.add(newcrypto)
             db.commit()
 
 
@@ -188,60 +169,58 @@ def cryptoverse():
         return render_template("cryptoverse.html",
                                cryptocurrencies=cryptocurrencies,
                                showAll=True)
-
-        db.add(crypto)
-        db.commit()
         return redirect(url_for('cryptoverse'))
 
 
 @app.route("/portfolio", methods=["GET", "POST"])
 def portfolio():
     if request.method == "GET":
-        newcryptos = db.query(Newcrypto).all()
-        for newcrypto in newcryptos:
-            newcrypto.price = get_crypto_price(newcrypto.code)
-        db.add_all(newcryptos)
+        cryptocurrencies = db.query(Cryptocurrency).all()
+        for crypto in cryptocurrencies:
+            crypto.price = get_crypto_price(crypto.code)
+            crypto.change = get_crypto_change(crypto.code)
+        db.add_all(cryptocurrencies)
         db.commit()
 
         return render_template("portfolio.html",
-                               newcryptos=newcryptos,
+                               cryptocurrencies=cryptocurrencies,
                                showAll=True)
     elif request.method == "POST":
-        newcrypto = Newcrypto(
+        crypto = Cryptocurrency(
             name=request.form.get("name"),
             code=request.form.get("code"),
             price=request.form.get("price"),
             quantity=request.form.get("quantity"),
         )
 
-        db.add(newcrypto)
+        db.add(crypto)
         db.commit()
         return redirect(url_for('portfolio'))
 
 
-@app.route("/portfolio/<newcrypto_code>/edit", methods=["GET", "POST"])
-def newcrypto_edit(newcrypto_code):
+@app.route("/portfolio/<crypto_code>/edit", methods=["GET", "POST"])
+def crypto_edit(crypto_code):
     if request.method == "GET":
-        newcrypto = db.query(Newcrypto).filter_by(code=newcrypto_code).first()
+        crypto = db.query(Cryptocurrency).filter_by(code=crypto_code).first()
         return render_template("portfolio.html",
-                               currentCrypto=newcrypto,
+                               currentCrypto=crypto,
                                showAll=False)
     elif request.method == "POST":
-        newcrypto = db.query(Newcrypto).filter_by(code=newcrypto_code).first()
-        newcrypto.name = request.form.get("name")
-        newcrypto.code = request.form.get("code")
-        newcrypto.price = float(request.form.get("price"))
-        newcrypto.quantity = float(request.form.get("quantity"))
-        db.add(newcrypto)
+        crypto = db.query(Cryptocurrency).filter_by(code=crypto_code).first()
+        crypto.name = request.form.get("name")
+        crypto.code = request.form.get("code")
+        crypto.price = float(request.form.get("price"))
+        crypto.quantity = float(request.form.get("quantity"))
+        db.add(crypto)
         db.commit()
         return redirect(url_for("portfolio"))
 
 
-@app.route("/portfolio/<newcrypto_code>/delete", methods=["GET"])
-def newcrypto_delete(newcrypto_code):
-    newcrypto = db.query(Newcrypto).filter_by(code=newcrypto_code).first()
+@app.route("/portfolio/<crypto_code>/delete", methods=["GET"])
+def crypto_delete(crypto_code):
+    crypto = db.query(Cryptocurrency).filter_by(code=crypto_code).first()
 
-    db.delete(newcrypto)
+    db.delete(crypto)
     db.commit()
     return redirect(url_for("portfolio"))
 
