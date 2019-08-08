@@ -136,8 +136,6 @@ def login():
         email = request.form.get("email")
         password = hashlib.sha256(request.form.get("password").encode("utf-8")).hexdigest()
 
-        logged_in = False
-
         user = db.query(User).filter_by(email=email).first()
 
         if not user:
