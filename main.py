@@ -102,6 +102,13 @@ def load_dummies():
         change=1
     )
 
+    qnt = Newcrypto(
+        code="QNT",
+        name="Quantnetwork",
+        price=200,
+        quantity=50
+    )
+
     cryptocurrencies = [btc, eth, xrp, bch, ltc, bnb, eos, bsv, xmr, xlm]
 
     for crypto in cryptocurrencies:
@@ -112,6 +119,18 @@ def load_dummies():
         else:
             print("Saving", crypto.code)
             db.add(crypto)
+            db.commit()
+
+    newcryptos = [qnt]
+
+    for newcrypto in newcryptos:
+        db_newcrypto = db.query(Newcrypto).filter_by(code=newcrypto.code).first()
+        if db_newcrypto:
+            print("Skipping", newcrypto.code)
+            continue
+        else:
+            print("Saving", newcrypto.code)
+            db.add(newcrypto)
             db.commit()
 
 
@@ -151,7 +170,7 @@ def login():
             db.commit()
 
             response: Response = make_response(redirect(url_for('cryptoverse')))
-            response.set_cookie("session_cookie", session_cookie, expires=time.time() + 3600)
+            response.set_cookie("session_cookie", session_cookie)
             return response
 
         return redirect(url_for('cryptoverse'))
@@ -181,27 +200,26 @@ def portfolio():
         newcryptos = db.query(Newcrypto).all()
         for newcrypto in newcryptos:
             newcrypto.price = get_crypto_price(newcrypto.code)
-            newcrypto.change = get_crypto_change(newcrypto.code)
         db.add_all(newcryptos)
         db.commit()
 
         return render_template("portfolio.html",
-                               cryptocurrencies=newcryptos,
+                               newcryptos=newcryptos,
                                showAll=True)
     elif request.method == "POST":
-        newcrypto = NewCrypto(
-            id=request.form.get("id"),
+        newcrypto = Newcrypto(
             name=request.form.get("name"),
             code=request.form.get("code"),
-            price=float(request.form.get("price")),
-            change=float(request.form.get("change")),
+            price=request.form.get("price"),
+            quantity=request.form.get("quantity"),
         )
+
         db.add(newcrypto)
         db.commit()
         return redirect(url_for('portfolio'))
 
 
-@app.route("/portfolio/<newcrypto_code>/add", methods=["GET", "POST"])
+@app.route("/portfolio/<newcrypto_code>/edit", methods=["GET", "POST"])
 def newcrypto_edit(newcrypto_code):
     if request.method == "GET":
         newcrypto = db.query(Newcrypto).filter_by(code=newcrypto_code).first()
@@ -210,11 +228,10 @@ def newcrypto_edit(newcrypto_code):
                                showAll=False)
     elif request.method == "POST":
         newcrypto = db.query(Newcrypto).filter_by(code=newcrypto_code).first()
-        newcrypto.id = request.form.get("id")
         newcrypto.name = request.form.get("name")
         newcrypto.code = request.form.get("code")
         newcrypto.price = float(request.form.get("price"))
-        newcrypto.change = float(request.form.get("change"))
+        newcrypto.quantity = float(request.form.get("quantity"))
         db.add(newcrypto)
         db.commit()
         return redirect(url_for("portfolio"))
@@ -223,6 +240,7 @@ def newcrypto_edit(newcrypto_code):
 @app.route("/portfolio/<newcrypto_code>/delete", methods=["GET"])
 def newcrypto_delete(newcrypto_code):
     newcrypto = db.query(Newcrypto).filter_by(code=newcrypto_code).first()
+
     db.delete(newcrypto)
     db.commit()
     return redirect(url_for("portfolio"))

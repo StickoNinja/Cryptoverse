@@ -3,98 +3,66 @@
 {% block content %}
 <header class="masthead">
     <div class="container d-flex h-100 align-items-center">
-      <div class="mx-auto text-center">
-          <div class="mx-auto text-center">
+        <div class="mx-auto text-center">
+            <div class="mx-auto text-center">
 
-{% if not showAll %}
-<form method="post" action="/portfolio/{{currentCrypto.code}}/add" class="form-inline d-flex">
-    <input type="text" placeholder="id" name="id" value="{{currentCrypto.id}}">
-    <input type="text" placeholder="imgLink" name="imgLink" value="{{currentCrypto.imgLink}}">
-    <input type="text" placeholder="name" name="name" value="{{currentCrypto.name}}">
-    <input type="text" placeholder="code" name="code" value="{{currentCrypto.code}}">
-    <input type="text" placeholder="price" name="price" value="{{currentCrypto.price}}">
-    <input type="text" placeholder="change" name="change" value="{{currentCrypto.change}}">
+                {% if not showAll %}
+                <form method="post" action="/portfolio/{{currentCrypto.code}}/edit" class="form-inline d-flex">
+                    <input type="text" required placeholder="ID" name="id" value="{{currentCrypto.id}}">
+                    <input type="text" required placeholder="Name" name="name"  value="{{currentCrypto.name}}">
+                    <input type="text" required placeholder="Ticker" name="code" value="{{currentCrypto.code}}">
+                    <input type="text" required placeholder="Price" name="price" value="{{currentCrypto.price}}">
+                    <input type="text" required placeholder="Quantity" name="quantity" value="{{currentCrypto.quantity}}">
 
-    <button type="submit" class="btn btn-primary mx-auto">Add</button>
-</form>
-{% endif %}
+                    <button type="submit" class="btn btn-primary mx-auto" style="background-color:#188058;">Add</button>
+                    <button type="submit" class="btn btn-primary mx-auto" style="background-color:#188058;">Delete</button>
+                </form>
+                {% endif %}
 
-{% if showAll %}
 
+                {% if showAll %}
+                <form method="post" action="/portfolio" class="form-inline d-flex">
+                    <input type="text" required placeholder="name" name="Name">
+                    <input type="text" required placeholder="code" name="Ticker">
+                    <input type="text" required placeholder="price" name="Price">
+                    <input type="float" required placeholder="quantity" name="Quantity">
+
+                    <button type="submit" class="btn btn-primary mx-auto" style="background-color:#188058;">Add</button>
+                </form>
+<p></p>
                 <table class="table">
                     <thead bgcolor="#1e6d9c" style="color: white;">
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Icon</th>
                         <th scope="col">Name</th>
                         <th scope="col">Ticker</th>
                         <th scope="col">Price</th>
-                        <th scope="col">Change</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody bgcolor="white">
+
                     {% for newcrypto in newcryptos %}
                     <tr>
                         <td>{{newcrypto.id}}</td>
-                        <td><img src="/static/img/{{newcrypto.code}}.png"></td>
                         <td>{{newcrypto.name}}</td>
                         <td>{{newcrypto.code}}</td>
                         <td>{{newcrypto.price}}</td>
-                        <td>{{newcrypto.change}}</td>
+                        <td>{{newcrypto.quantity}}</td>
+                        <td><a href="/portfolio/{{newcrypto.code}}/edit">Edit</a></td>
+                        <td><a href="/portfolio/{{newcrypto.code}}/delete">Delete</a></td>
+
                     </tr>
-
-
                     {% endfor %}
                     </tbody>
                 </table>
+                {% endif %}
 
-{% endif %}
-
+            </div>
         </div>
-      </div>
     </div>
-  </header>
-
-{% if showAll %}
-<form method="post" action="/portfolio" class="form-inline d-flex">
-    <input type="text" placeholder="id" name="id">
-    <input type="text" placeholder="imgLink" name="imgLink">
-    <input type="text" placeholder="name" name="name">
-    <input type="text" placeholder="code" name="code">
-    <input type="text" placeholder="price" name="price">
-    <input type="text" placeholder="change" name="change">
-
-      <button type="submit" class="btn btn-primary mx-auto">Add</button>
-</form>
-
-<table>
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Icon</th>
-        <th scope="col">Name</th>
-        <th scope="col">Code</th>
-        <th scope="col">Price</th>
-        <th scope="col">Change</th>
-        <th scope="col">Add</th>
-
-    </tr>
-    </thead>
-    <tbody>
-
-    {% for newcrypto in newcryptos %}
-    <tr>
-        <td>{{newcrypto.id}}</td>
-        <td><a href="/portfolio/{{newcrypto.code}}"><img src="{{newcrypto.imgLink}}"></a></td>
-        <td>{{newcrypto.name}}</td>
-        <td>{{newcrypto.code}}</td>
-        <td>{{newcrypto.price}}</td>
-        <td>{{newcrypto.change}}</td>
-
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% endif %}
+</header>
 
 {% endblock content %}

@@ -26,4 +26,4 @@ class Newcrypto(db.Model):
     code = db.Column(db.String, unique=True)
     name = db.Column(db.String, unique=True)
     price = db.Column(db.Float)
-    change = db.Column(db.Float)
+    quantity = db.Column(db.Float)
