@@ -4,11 +4,13 @@ from sqla_wrapper import SQLAlchemy
 db = SQLAlchemy(
     os.getenv("DATABASE_URL", "sqlite:///localhost.sqlite"))
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
     session_token = db.Column(db.String)
+
 
 class Cryptocurrency(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,3 +20,10 @@ class Cryptocurrency(db.Model):
     price = db.Column(db.Float)
     change = db.Column(db.Float)
 
+
+class Newcrypto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String, unique=True)
+    name = db.Column(db.String, unique=True)
+    price = db.Column(db.Float)
+    change = db.Column(db.Float)

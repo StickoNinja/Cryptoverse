@@ -2,28 +2,43 @@
 
 {% block content %}
 
-<table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Icon</th>
-      <th scope="col">Name</th>
-      <th scope="col">Ticker</th>
-      <th scope="col">Price</th>
-      <th scope="col">Change</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-        <td></td>
-        <td>{{crypto.id}}</td>
-        <td><a href="/portfolio/{{crypto.code}}"><img src="{{crypto.imgLink}}"></a></td>
-        <td>{{crypto.name}}</td>
-        <td>{{crypto.code}}</td>
-        <td>{{crypto.price}}</td>
-        <td>{{crypto.change}}</td>
-    </tr>
-  </tbody>
-</table>
+{% if showAll %}
+ <header class="masthead">
+    <div class="container d-flex h-100 align-items-center">
+      <div class="mx-auto text-center">
+          <div class="mx-auto text-center">
+              <p></p>
+                <table class="table">
+                    <thead bgcolor="#1e6d9c" style="color: white;">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Icon</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Ticker</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Change</th>
+                    </tr>
+                    </thead>
+                    <tbody bgcolor="white">
+                    {% for crypto in cryptocurrencies %}
+                    <tr>
+                        <td>{{crypto.id}}</td>
+                        <td><img src="/static/img/{{crypto.code}}.png"></td>
+                        <td>{{crypto.name}}</td>
+                        <td>{{crypto.code}}</td>
+                        <td>{{crypto.price}}</td>
+                        <td>{{crypto.change}}</td>
+                    </tr>
+
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+      </div>
+    </div>
+  </header>
+
+{% endif %}
 
 {% endblock content %}

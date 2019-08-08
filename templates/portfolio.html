@@ -1,15 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <header class="masthead">
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
-        <h1 class="mx-auto my-0 text-uppercase">Crypto Portfolio Tracker</h1>
-
-      </div>
-    </div>
-  </header>
+          <div class="mx-auto text-center">
 
 {% if not showAll %}
 <form method="post" action="/portfolio/{{currentCrypto.code}}/add" class="form-inline d-flex">
@@ -24,6 +19,41 @@
 </form>
 {% endif %}
 
+{% if showAll %}
+
+                <table class="table">
+                    <thead bgcolor="#1e6d9c" style="color: white;">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Icon</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Ticker</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Change</th>
+                    </tr>
+                    </thead>
+                    <tbody bgcolor="white">
+                    {% for newcrypto in newcryptos %}
+                    <tr>
+                        <td>{{newcrypto.id}}</td>
+                        <td><img src="/static/img/{{newcrypto.code}}.png"></td>
+                        <td>{{newcrypto.name}}</td>
+                        <td>{{newcrypto.code}}</td>
+                        <td>{{newcrypto.price}}</td>
+                        <td>{{newcrypto.change}}</td>
+                    </tr>
+
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+{% endif %}
+
+        </div>
+      </div>
+    </div>
+  </header>
 
 {% if showAll %}
 <form method="post" action="/portfolio" class="form-inline d-flex">
@@ -46,42 +76,25 @@
         <th scope="col">Code</th>
         <th scope="col">Price</th>
         <th scope="col">Change</th>
+        <th scope="col">Add</th>
 
     </tr>
     </thead>
     <tbody>
 
-    {% for crypto in cryptocurrencies %}
+    {% for newcrypto in newcryptos %}
     <tr>
-        <td>{{crypto.id}}</td>
-        <td><a href="/portfolio/{{crypto.code}}"><img src="{{crypto.imgLink}}"></a></td>
-        <td>{{crypto.name}}</td>
-        <td>{{crypto.code}}</td>
-        <td>{{crypto.price}}</td>
-        <td>{{crypto.change}}</td>
+        <td>{{newcrypto.id}}</td>
+        <td><a href="/portfolio/{{newcrypto.code}}"><img src="{{newcrypto.imgLink}}"></a></td>
+        <td>{{newcrypto.name}}</td>
+        <td>{{newcrypto.code}}</td>
+        <td>{{newcrypto.price}}</td>
+        <td>{{newcrypto.change}}</td>
 
     </tr>
     {% endfor %}
     </tbody>
 </table>
 {% endif %}
-
-<section id="contact" class="contact-section bg-black">
-    <div class="container">
-        <div class="social d-flex justify-content-center">
-        <a href="https://github.com/StickoNinja" target="_blank" class="mx-2">
-          <i class="fab fa-github"></i>
-        </a>
-        </div>
-    </div>
-  </section>
-
-</body>
-
-  <footer class="bg-black small text-center text-white-50">
-    <div class="container">
-      Copyright &copy; The Cryptoverse 2019
-    </div>
-  </footer>
 
 {% endblock content %}
